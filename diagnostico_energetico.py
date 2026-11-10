@@ -1,6 +1,7 @@
 
 from decimal import Decimal, InvalidOperation
 from datetime import datetime
+from eficiencia_energetica import simular_eficiencia
 
 from consultar_tarifa import buscar_tarifa
 
@@ -78,6 +79,10 @@ def realizar_diagnostico(dados):
     print("O valor total da conta pode incluir impostos,")
     print("bandeiras tarifárias, encargos e outros componentes.")
 
+    simular_eficiencia(
+        dados["consumo_kwh"],
+        tarifa["tarifa_total"]
+    )
 
 def main():
     dados = coletar_dados()
