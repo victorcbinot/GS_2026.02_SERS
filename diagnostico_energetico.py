@@ -5,6 +5,7 @@ from datetime import datetime
 from consultar_tarifa import buscar_tarifa
 from eficiencia_energetica import simular_eficiencia
 from energia_solar import simular_energia_solar
+from comparar_alternativas import comparar_alternativas
 
 
 def coletar_dados():
@@ -52,18 +53,21 @@ def realizar_diagnostico(dados):
         print("\nDistribuidora não encontrada na base de tarifas.")
         return
 
-    custo_estimado = dados["consumo_kwh"] * tarifa["tarifa_total"]
+    consumo = dados["consumo_kwh"]
+    tarifa_total = tarifa["tarifa_total"]
+
+    custo_estimado = consumo * tarifa_total
 
     print("\n=== RESULTADO DO DIAGNÓSTICO ===")
     print(f"Distribuidora: {tarifa['distribuidora']}")
     print(f"Referência: {dados['mes_referencia']}")
-    print(f"Consumo mensal: {dados['consumo_kwh']:.2f} kWh")
+    print(f"Consumo mensal: {consumo:.2f} kWh")
     print(f"Valor total da conta: R$ {dados['valor_conta']:.2f}")
 
     print("\n=== TARIFA DE ENERGIA ===")
     print(f"TE: R$ {tarifa['tarifa_te']:.5f}/kWh")
     print(f"TUSD: R$ {tarifa['tarifa_tusd']:.5f}/kWh")
-    print(f"TE + TUSD: R$ {tarifa['tarifa_total']:.5f}/kWh")
+    print(f"TE + TUSD: R$ {tarifa_total:.5f}/kWh")
     print(
         f"Vigência: {tarifa['vigencia_inicio']} "
         f"até {tarifa['vigencia_fim']}"
@@ -77,29 +81,23 @@ def realizar_diagnostico(dados):
     print("O valor total da conta pode incluir impostos,")
     print("bandeiras tarifárias, encargos e outros componentes.")
 
-    print("\n=== EFICIÊNCIA ENERGÉTICA ===")
-
-    simular_eficiencia(
-        dados["consumo_kwh"],
-        tarifa["tarifa_total"]
+    cenarios_eficiencia = simular_eficiencia(
+        consumo,
+        tarifa_total
     )
 
     print("\n=== ENERGIA SOLAR FOTOVOLTAICA ===")
 
-    resultado_solar = simular_energia_solar(
-        dados["consumo_kwh"]
-    )
+    resultado_solar = simular_energia_solar(consumo)
 
     print(
         f"Potência estimada do sistema: "
         f"{resultado_solar['potencia_kwp']:.2f} kWp"
     )
-
     print(
         f"Geração mensal estimada: "
         f"{resultado_solar['geracao_mensal']:.2f} kWh"
     )
-
     print(
         f"Geração anual estimada: "
         f"{resultado_solar['geracao_anual']:.2f} kWh"
@@ -109,6 +107,13 @@ def realizar_diagnostico(dados):
     print("O dimensionamento solar utiliza parâmetros estimados.")
     print("A geração real depende das condições de instalação.")
     print("A geração estimada não representa economia financeira integral.")
+
+    comparar_alternativas(
+        consumo,
+        tarifa_total,
+        cenarios_eficiencia,
+        resultado_solar
+    )
 
 
 def main():
