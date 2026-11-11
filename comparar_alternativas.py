@@ -36,11 +36,15 @@ def comparar_alternativas(
         f"Geração anual estimada: "
         f"{resultado_solar['geracao_anual']:.2f} kWh"
     )
+    print(
+        f"Investimento estimado: "
+        f"R$ {resultado_solar['investimento_estimado']:.2f}"
+    )
 
     print("\n=== CONSIDERAÇÕES DA COMPARAÇÃO ===")
     print("A eficiência energética reduz o consumo da residência.")
     print("A energia solar pode gerar eletricidade no próprio imóvel.")
     print("O dimensionamento solar é uma estimativa técnica.")
-    print("O custo de instalação solar ainda não está incluído.")
+    print("O investimento solar utiliza uma referência histórica da EPE.")
     print("A economia solar depende das condições de instalação,")
     print("das regras de compensação e dos componentes da conta.")
