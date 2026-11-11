@@ -2,16 +2,48 @@
 from decimal import Decimal, InvalidOperation
 from datetime import datetime
 
-from consultar_tarifa import buscar_tarifa
+from consultar_tarifa import (
+    buscar_tarifa,
+    listar_distribuidoras
+)
 from eficiencia_energetica import simular_eficiencia
 from energia_solar import simular_energia_solar
 from comparar_alternativas import comparar_alternativas
 
 
+def coletar_distribuidora():
+    distribuidoras = listar_distribuidoras()
+
+    if not distribuidoras:
+        print("\nNenhuma distribuidora encontrada na base de dados.")
+        return None
+
+    print("\n=== DISTRIBUIDORAS DISPONÍVEIS ===")
+
+    for indice, distribuidora in enumerate(distribuidoras, start=1):
+        print(f"{indice}. {distribuidora}")
+
+    try:
+        escolha = int(input("\nEscolha o número da distribuidora: "))
+
+        if escolha < 1 or escolha > len(distribuidoras):
+            print("\nErro: escolha uma opção válida.")
+            return None
+
+    except ValueError:
+        print("\nErro: informe um número válido.")
+        return None
+
+    return distribuidoras[escolha - 1]
+
+
 def coletar_dados():
     print("\n=== DIAGNÓSTICO ENERGÉTICO RESIDENCIAL ===")
 
-    distribuidora = input("Distribuidora de energia: ").strip()
+    distribuidora = coletar_distribuidora()
+
+    if distribuidora is None:
+        return None
 
     try:
         consumo = Decimal(
@@ -28,8 +60,8 @@ def coletar_dados():
 
     mes_referencia = input("Mês de referência (MM/AAAA): ").strip()
 
-    if not distribuidora or consumo <= 0 or valor_conta <= 0:
-        print("\nErro: preencha os campos corretamente.")
+    if consumo <= 0 or valor_conta <= 0:
+        print("\nErro: os valores devem ser maiores que zero.")
         return None
 
     try:
@@ -102,9 +134,14 @@ def realizar_diagnostico(dados):
         f"Geração anual estimada: "
         f"{resultado_solar['geracao_anual']:.2f} kWh"
     )
+    print(
+        f"Investimento estimado: "
+        f"R$ {resultado_solar['investimento_estimado']:.2f}"
+    )
 
     print("\nObservação:")
     print("O dimensionamento solar utiliza parâmetros estimados.")
+    print("O custo de instalação utiliza uma referência histórica da EPE.")
     print("A geração real depende das condições de instalação.")
     print("A geração estimada não representa economia financeira integral.")
 

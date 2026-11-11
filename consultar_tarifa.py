@@ -22,6 +22,18 @@ def carregar_tarifas():
         return list(leitor)
 
 
+def listar_distribuidoras():
+    tarifas = carregar_tarifas()
+
+    distribuidoras = sorted({
+        tarifa["distribuidora"].strip()
+        for tarifa in tarifas
+        if tarifa["distribuidora"].strip()
+    })
+
+    return distribuidoras
+
+
 def buscar_tarifa(nome_distribuidora):
     tarifas = carregar_tarifas()
 
