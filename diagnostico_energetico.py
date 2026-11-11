@@ -1,9 +1,10 @@
 
 from decimal import Decimal, InvalidOperation
 from datetime import datetime
-from eficiencia_energetica import simular_eficiencia
 
 from consultar_tarifa import buscar_tarifa
+from eficiencia_energetica import simular_eficiencia
+from energia_solar import simular_energia_solar
 
 
 def coletar_dados():
@@ -26,18 +27,14 @@ def coletar_dados():
 
     mes_referencia = input("Mês de referência (MM/AAAA): ").strip()
 
-    if not distribuidora:
-        print("\nErro: informe a distribuidora.")
-        return None
-
-    if consumo <= 0 or valor_conta <= 0:
-        print("\nErro: consumo e valor da conta devem ser maiores que zero.")
+    if not distribuidora or consumo <= 0 or valor_conta <= 0:
+        print("\nErro: preencha os campos corretamente.")
         return None
 
     try:
         datetime.strptime(mes_referencia, "%m/%Y")
     except ValueError:
-        print("\nErro: informe o mês no formato MM/AAAA.")
+        print("\nErro: utilize o formato MM/AAAA.")
         return None
 
     return {
@@ -58,20 +55,21 @@ def realizar_diagnostico(dados):
     custo_estimado = dados["consumo_kwh"] * tarifa["tarifa_total"]
 
     print("\n=== RESULTADO DO DIAGNÓSTICO ===")
-
     print(f"Distribuidora: {tarifa['distribuidora']}")
     print(f"Referência: {dados['mes_referencia']}")
-    print(f"Consumo mensal: {dados['consumo_kwh']} kWh")
+    print(f"Consumo mensal: {dados['consumo_kwh']:.2f} kWh")
     print(f"Valor total da conta: R$ {dados['valor_conta']:.2f}")
 
     print("\n=== TARIFA DE ENERGIA ===")
-
     print(f"TE: R$ {tarifa['tarifa_te']:.5f}/kWh")
     print(f"TUSD: R$ {tarifa['tarifa_tusd']:.5f}/kWh")
     print(f"TE + TUSD: R$ {tarifa['tarifa_total']:.5f}/kWh")
+    print(
+        f"Vigência: {tarifa['vigencia_inicio']} "
+        f"até {tarifa['vigencia_fim']}"
+    )
 
     print("\n=== ESTIMATIVA DE CUSTO ===")
-
     print(f"Custo estimado de TE + TUSD: R$ {custo_estimado:.2f}")
 
     print("\nObservação:")
@@ -79,10 +77,39 @@ def realizar_diagnostico(dados):
     print("O valor total da conta pode incluir impostos,")
     print("bandeiras tarifárias, encargos e outros componentes.")
 
+    print("\n=== EFICIÊNCIA ENERGÉTICA ===")
+
     simular_eficiencia(
         dados["consumo_kwh"],
         tarifa["tarifa_total"]
     )
+
+    print("\n=== ENERGIA SOLAR FOTOVOLTAICA ===")
+
+    resultado_solar = simular_energia_solar(
+        dados["consumo_kwh"]
+    )
+
+    print(
+        f"Potência estimada do sistema: "
+        f"{resultado_solar['potencia_kwp']:.2f} kWp"
+    )
+
+    print(
+        f"Geração mensal estimada: "
+        f"{resultado_solar['geracao_mensal']:.2f} kWh"
+    )
+
+    print(
+        f"Geração anual estimada: "
+        f"{resultado_solar['geracao_anual']:.2f} kWh"
+    )
+
+    print("\nObservação:")
+    print("O dimensionamento solar utiliza parâmetros estimados.")
+    print("A geração real depende das condições de instalação.")
+    print("A geração estimada não representa economia financeira integral.")
+
 
 def main():
     dados = coletar_dados()
