@@ -8,7 +8,10 @@
 | Miguel Marcelo       | 569467 |
 | Victor Binot         | 571499 |
 
+### Links do projeto
 
+- **Repositório GitHub:** https://github.com/victorcbinot/GS_2026.02_SERS
+- **Vídeo de apresentação:** PREENCHER COM O LINK DO VÍDEO
 
 ## 2. Sobre o projeto
 
@@ -44,8 +47,8 @@ O projeto é direcionado a consumidores residenciais que desejam compreender mel
 
 O programa funciona por meio de uma interface no terminal e segue as seguintes etapas:
 
-1. **Identificação da distribuidora:** o usuário informa sua distribuidora de energia elétrica.
-2. **Seleção do período:** informa o mês e o ano de referência disponíveis na base tarifária.
+1. **Identificação da distribuidora:** o usuário informa sua distribuidora de energia elétrica. Caso o nome não seja encontrado, o programa apresenta uma lista numerada com as distribuidoras disponíveis.
+2. **Seleção do período:** informa o mês e o ano de referência disponíveis na base tarifária. Caso o mês informado não esteja disponível, o programa apresenta uma lista numerada com os meses válidos.
 3. **Informações de consumo:** informa o consumo mensal em kWh e o valor total da conta de energia em reais.
 4. **Diagnóstico energético:** o programa consulta a tarifa residencial e estima o custo referente à TE e à TUSD.
 5. **Eficiência energética:** apresenta cenários hipotéticos de redução de consumo de 5%, 10% e 15%.
@@ -155,6 +158,8 @@ Onde:
 
 O resultado não representa necessariamente o valor total da conta de energia, pois não inclui todos os componentes que podem estar presentes na fatura.
 
+O valor total da conta informado pelo usuário é utilizado apenas como referência de exibição e não entra no cálculo do custo estimado, que considera exclusivamente TE e TUSD.
+
 ### 9.2. Economia por eficiência energética
 
 A energia economizada é calculada por:
@@ -251,6 +256,9 @@ GS_2026.02_SERS/
 ├── energia_solar.py
 ├── comparar_alternativas.py
 │
+├── testes/
+│   └── test_calculos.py
+│
 ├── requirements.txt
 └── README.md
 ```
@@ -265,6 +273,7 @@ GS_2026.02_SERS/
 | `eficiencia_energetica.py` | Simula os cenários de redução de consumo. |
 | `energia_solar.py` | Calcula o dimensionamento e o investimento solar estimado. |
 | `comparar_alternativas.py` | Compara os resultados financeiros e ambientais. |
+| `testes/` | Armazena os testes automatizados dos cálculos e da consulta de tarifas. |
 | `dados/` | Armazena a base tarifária processada. |
 | `requirements.txt` | Lista as dependências externas do projeto. |
 
@@ -274,7 +283,6 @@ GS_2026.02_SERS/
 
 - Python instalado.
 - Conexão com a internet para consultar e atualizar os dados da ANEEL.
-- Git, caso o projeto seja clonado pelo GitHub.
 
 ### 12.1. Instalar dependências
 
@@ -316,6 +324,16 @@ Os testes contemplaram:
 - Estimativa de investimento e retorno financeiro.
 - Cálculo das emissões estimadas e potencialmente evitadas.
 - Execução completa do programa sem erros.
+
+### Testes automatizados
+
+O projeto inclui testes automatizados dos cálculos de energia solar, dos cenários de eficiência energética, da consulta de tarifas e da conversão de unidades.
+
+Para executá-los:
+
+```bash
+python -m unittest discover -s testes
+```
 
 ### Exemplo de teste realizado
 

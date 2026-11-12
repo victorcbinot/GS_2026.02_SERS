@@ -1,4 +1,5 @@
 
+import sys
 from decimal import Decimal, InvalidOperation
 from datetime import datetime
 
@@ -16,6 +17,11 @@ def coletar_distribuidora():
     distribuidora = input("Distribuidora de energia: ").strip()
 
     distribuidoras = listar_distribuidoras()
+
+    if not distribuidoras:
+        raise RuntimeError(
+            "Nenhuma distribuidora disponível na base de tarifas."
+        )
 
     distribuidora_encontrada = next(
         (
@@ -51,6 +57,11 @@ def coletar_distribuidora():
 
 def coletar_mes_referencia(distribuidora):
     meses = listar_meses_disponiveis(distribuidora)
+
+    if not meses:
+        raise RuntimeError(
+            "Nenhum mês disponível para a distribuidora selecionada."
+        )
 
     while True:
         mes = input("Mês de referência (MM/AAAA): ").strip()
@@ -203,11 +214,17 @@ def realizar_diagnostico(dados):
 
 
 def main():
-    dados = coletar_dados()
+    try:
+        dados = coletar_dados()
+    except RuntimeError as erro:
+        print(f"\nErro: {erro}")
+        return 1
 
     if dados:
         realizar_diagnostico(dados)
 
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

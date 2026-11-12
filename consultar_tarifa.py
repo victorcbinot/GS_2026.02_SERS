@@ -14,14 +14,21 @@ ARQUIVO_TARIFAS = (
 
 
 def carregar_tarifas():
-    with open(
-        ARQUIVO_TARIFAS,
-        "r",
-        encoding="utf-8-sig",
-        newline=""
-    ) as arquivo:
-        leitor = csv.DictReader(arquivo, delimiter=";")
-        return list(leitor)
+    try:
+        with open(
+            ARQUIVO_TARIFAS,
+            "r",
+            encoding="utf-8-sig",
+            newline=""
+        ) as arquivo:
+            leitor = csv.DictReader(arquivo, delimiter=";")
+            return list(leitor)
+
+    except FileNotFoundError as erro:
+        raise RuntimeError(
+            "Base de tarifas não encontrada. "
+            "Execute 'python processar_tarifa.py' para gerá-la."
+        ) from erro
 
 
 def meses_da_tarifa(tarifa):
@@ -57,6 +64,7 @@ def listar_distribuidoras():
         tarifa["distribuidora"].strip()
         for tarifa in tarifas
         if tarifa["distribuidora"].strip()
+        and tarifa["distribuidora"].strip().casefold() != "não informado"
         and meses_da_tarifa(tarifa)
     })
 

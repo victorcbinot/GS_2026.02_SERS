@@ -33,7 +33,7 @@ def simular_eficiencia(consumo_mensal, tarifa_total):
 
         resultados.append(resultado)
 
-        print(f"\nRedução de {percentual * 100}%")
+        print(f"\nRedução de {percentual * 100:.0f}%")
         print(f"Consumo economizado: {consumo_economizado:.2f} kWh")
         print(f"Novo consumo: {novo_consumo:.2f} kWh")
         print(f"Novo custo estimado: R$ {novo_custo:.2f}")

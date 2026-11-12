@@ -23,7 +23,7 @@ def comparar_alternativas(
 
     print(
         f"Emissões estimadas: "
-        f"{emissao_atual:.2f} kg de CO2 por mês"
+        f"{emissao_atual:.2f} kg de CO₂ por mês"
     )
 
     print("\n2. EFICIÊNCIA ENERGÉTICA")
@@ -42,11 +42,11 @@ def comparar_alternativas(
         print(f"Economia mensal: R$ {cenario['economia']:.2f}")
         print(
             f"Emissões evitadas: "
-            f"{emissao_evitada:.2f} kg de CO2 por mês"
+            f"{emissao_evitada:.2f} kg de CO₂ por mês"
         )
         print(
             f"Emissões evitadas por ano: "
-            f"{emissao_evitada * 12:.2f} kg de CO2"
+            f"{emissao_evitada * 12:.2f} kg de CO₂"
         )
 
     print("\n3. ENERGIA SOLAR FOTOVOLTAICA")
@@ -73,11 +73,11 @@ def comparar_alternativas(
     print(f"Investimento estimado: R$ {investimento:.2f}")
     print(
         f"Emissões potencialmente evitadas: "
-        f"{emissao_evitada_solar:.2f} kg de CO2 por mês"
+        f"{emissao_evitada_solar:.2f} kg de CO₂ por mês"
     )
     print(
         f"Emissões potencialmente evitadas por ano: "
-        f"{emissao_evitada_solar * 12:.2f} kg de CO2"
+        f"{emissao_evitada_solar * 12:.2f} kg de CO₂"
     )
 
     print("\n=== RETORNO FINANCEIRO ESTIMADO ===")

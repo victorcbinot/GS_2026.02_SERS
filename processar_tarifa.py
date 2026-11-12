@@ -1,11 +1,13 @@
 
 import csv
 import json
+import sys
 from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
 
 import requests
+from requests.exceptions import RequestException
 
 
 URL_API = "https://dadosabertos.aneel.gov.br/api/3/action/datastore_search"
@@ -58,19 +60,38 @@ def buscar_registros():
             "filters": json.dumps(FILTROS, ensure_ascii=False)
         }
 
-        resposta = requests.get(
-            URL_API,
-            params=parametros,
-            timeout=60
-        )
+        try:
+            resposta = requests.get(
+                URL_API,
+                params=parametros,
+                timeout=60
+            )
 
-        resposta.raise_for_status()
-        resultado = resposta.json()
+            resposta.raise_for_status()
+            resultado = resposta.json()
+
+        except ValueError as erro:
+            raise RuntimeError(
+                "A API da ANEEL retornou uma resposta inválida."
+            ) from erro
+
+        except RequestException as erro:
+            raise RuntimeError(
+                "Falha ao consultar a API da ANEEL. "
+                "Verifique a conexão com a internet e tente novamente."
+            ) from erro
 
         if not resultado.get("success"):
             raise RuntimeError("A API da ANEEL retornou um erro.")
 
-        lote = resultado["result"]["records"]
+        dados_resultado = resultado.get("result") or {}
+        lote = dados_resultado.get("records")
+
+        if not isinstance(lote, list):
+            raise RuntimeError(
+                "A API da ANEEL retornou uma resposta inesperada."
+            )
+
         registros.extend(lote)
 
         print(f"Registros consultados: {len(registros)}")
@@ -150,17 +171,23 @@ def salvar_csv(tarifas):
         escritor.writerows(tarifas)
 
     print(f"\nArquivo gerado: {ARQUIVO_SAIDA}")
-    print(f"Distribuidoras encontradas: {len(tarifas)}")
+    print(f"Registros processados: {len(tarifas)}")
 
 
 def main():
     print("Consultando tarifas da ANEEL...")
 
-    registros = buscar_registros()
-    tarifas = processar_registros(registros)
+    try:
+        registros = buscar_registros()
+        tarifas = processar_registros(registros)
+        salvar_csv(tarifas)
 
-    salvar_csv(tarifas)
+    except RuntimeError as erro:
+        print(f"\nErro: {erro}")
+        return 1
+
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
