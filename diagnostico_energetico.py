@@ -4,7 +4,8 @@ from datetime import datetime
 
 from consultar_tarifa import (
     buscar_tarifa,
-    listar_distribuidoras
+    listar_distribuidoras,
+    listar_meses_disponiveis
 )
 from eficiencia_energetica import simular_eficiencia
 from energia_solar import simular_energia_solar
@@ -12,29 +13,92 @@ from comparar_alternativas import comparar_alternativas
 
 
 def coletar_distribuidora():
+    distribuidora = input("Distribuidora de energia: ").strip()
+
     distribuidoras = listar_distribuidoras()
 
-    if not distribuidoras:
-        print("\nNenhuma distribuidora encontrada na base de dados.")
-        return None
+    distribuidora_encontrada = next(
+        (
+            nome for nome in distribuidoras
+            if nome.casefold() == distribuidora.casefold()
+        ),
+        None
+    )
 
-    print("\n=== DISTRIBUIDORAS DISPONÍVEIS ===")
+    if distribuidora_encontrada:
+        return distribuidora_encontrada
 
-    for indice, distribuidora in enumerate(distribuidoras, start=1):
-        print(f"{indice}. {distribuidora}")
+    print("\nDistribuidora não encontrada.")
+    print("\nDistribuidoras disponíveis:")
 
-    try:
-        escolha = int(input("\nEscolha o número da distribuidora: "))
+    for indice, nome in enumerate(distribuidoras, start=1):
+        print(f"{indice}. {nome}")
 
-        if escolha < 1 or escolha > len(distribuidoras):
-            print("\nErro: escolha uma opção válida.")
-            return None
+    while True:
+        try:
+            escolha = int(
+                input("\nEscolha o número da distribuidora: ")
+            )
 
-    except ValueError:
-        print("\nErro: informe um número válido.")
-        return None
+            if 1 <= escolha <= len(distribuidoras):
+                return distribuidoras[escolha - 1]
 
-    return distribuidoras[escolha - 1]
+            print("Escolha uma opção válida.")
+
+        except ValueError:
+            print("Digite o número de uma das opções.")
+
+
+def coletar_mes_referencia(distribuidora):
+    meses = listar_meses_disponiveis(distribuidora)
+
+    while True:
+        mes = input("Mês de referência (MM/AAAA): ").strip()
+
+        try:
+            datetime.strptime(mes, "%m/%Y")
+        except ValueError:
+            print("\nFormato inválido. Utilize MM/AAAA.")
+            continue
+
+        if mes in meses:
+            return mes
+
+        print("\nMês não disponível para essa distribuidora.")
+        print("\nMeses disponíveis:")
+
+        for indice, mes_disponivel in enumerate(meses, start=1):
+            print(f"{indice}. {mes_disponivel}")
+
+        while True:
+            try:
+                escolha = int(
+                    input("\nEscolha o número do mês: ")
+                )
+
+                if 1 <= escolha <= len(meses):
+                    return meses[escolha - 1]
+
+                print("Escolha uma opção válida.")
+
+            except ValueError:
+                print("Digite o número de uma das opções.")
+
+
+def coletar_valor_positivo(mensagem):
+    while True:
+        entrada = input(mensagem).strip().replace(",", ".")
+
+        try:
+            valor = Decimal(entrada)
+
+            if valor.is_finite() and valor > 0:
+                return valor
+
+            print("Informe um valor numérico maior que zero.")
+
+        except InvalidOperation:
+            print("Valor inválido. Digite um número, por exemplo: 1500,50.")
 
 
 def coletar_dados():
@@ -42,33 +106,15 @@ def coletar_dados():
 
     distribuidora = coletar_distribuidora()
 
-    if distribuidora is None:
-        return None
+    mes_referencia = coletar_mes_referencia(distribuidora)
 
-    try:
-        consumo = Decimal(
-            input("Consumo mensal (kWh): ").replace(",", ".")
-        )
+    consumo = coletar_valor_positivo(
+        "Consumo mensal (kWh): "
+    )
 
-        valor_conta = Decimal(
-            input("Valor total da conta (R$): ").replace(",", ".")
-        )
-
-    except InvalidOperation:
-        print("\nErro: informe valores numéricos válidos.")
-        return None
-
-    mes_referencia = input("Mês de referência (MM/AAAA): ").strip()
-
-    if consumo <= 0 or valor_conta <= 0:
-        print("\nErro: os valores devem ser maiores que zero.")
-        return None
-
-    try:
-        datetime.strptime(mes_referencia, "%m/%Y")
-    except ValueError:
-        print("\nErro: utilize o formato MM/AAAA.")
-        return None
+    valor_conta = coletar_valor_positivo(
+        "Valor total da conta (R$): "
+    )
 
     return {
         "distribuidora": distribuidora,
@@ -79,10 +125,13 @@ def coletar_dados():
 
 
 def realizar_diagnostico(dados):
-    tarifa = buscar_tarifa(dados["distribuidora"])
+    tarifa = buscar_tarifa(
+        dados["distribuidora"],
+        dados["mes_referencia"]
+    )
 
     if tarifa is None:
-        print("\nDistribuidora não encontrada na base de tarifas.")
+        print("\nNão foi possível encontrar a tarifa para os dados selecionados.")
         return
 
     consumo = dados["consumo_kwh"]
