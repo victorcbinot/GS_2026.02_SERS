@@ -21,6 +21,8 @@ A aplicação utiliza dados tarifários disponibilizados pela Agência Nacional 
 
 A partir das informações fornecidas pelo usuário, o programa apresenta estimativas de custos, economia financeira, dimensionamento solar e emissões de CO₂ associadas ao consumo de eletricidade.
 
+O projeto também conta com o **Citizen Assist AI**, um chatbot executado no terminal que apresenta o simulador, responde dúvidas sobre consumo e economia de energia, coleta os dados necessários, executa o diagnóstico energético e explica os resultados em linguagem simples. O chatbot reutiliza os mesmos cálculos e módulos do simulador original.
+
 ## 3. Problema identificado
 
 O consumo de energia elétrica representa uma despesa recorrente para as famílias. Entretanto, nem sempre os consumidores conhecem o impacto financeiro de seus hábitos de consumo ou as alternativas disponíveis para melhorar a eficiência energética de suas residências.
@@ -37,6 +39,7 @@ Diante desse cenário, o projeto propõe uma ferramenta simples para ajudar o co
 - Simular diferentes cenários de redução do consumo.
 - Estimar a potência e a geração de um sistema solar fotovoltaico.
 - Comparar os resultados financeiros e ambientais das alternativas.
+- Oferecer uma interação por chatbot no terminal para orientar o usuário e explicar os resultados.
 - Apresentar informações que auxiliem na tomada de decisão.
 
 ## 5. Público-alvo
@@ -45,7 +48,22 @@ O projeto é direcionado a consumidores residenciais que desejam compreender mel
 
 ## 6. Funcionamento da aplicação
 
-O programa funciona por meio de uma interface no terminal e segue as seguintes etapas:
+A aplicação é utilizada por meio do chatbot **Citizen Assist AI**, que funciona diretamente no terminal e reutiliza os módulos de cálculo do projeto.
+
+### 6.1. Citizen Assist AI (chatbot)
+
+O chatbot apresenta o seguinte menu:
+
+1. **Fazer diagnóstico energético:** coleta distribuidora, mês de referência, consumo mensal e valor da conta, executa o diagnóstico e explica os resultados em linguagem simples.
+2. **Tirar dúvidas sobre consumo e economia de energia:** responde perguntas sobre consumo, eficiência energética, energia solar, tarifas, investimento, retorno estimado e emissões de CO₂.
+3. **Ver fontes de dados e limitações:** apresenta as fontes utilizadas e as principais limitações das estimativas.
+4. **Encerrar a conversa:** finaliza o chatbot.
+
+Após um diagnóstico, o usuário pode voltar ao menu para realizar uma nova simulação ou encerrar o programa. As respostas do chatbot são baseadas nos cálculos do projeto e não substituem os resultados calculados pelo próprio sistema.
+
+### 6.2. Etapas do diagnóstico energético
+
+Dentro da opção 1 do chatbot, o diagnóstico segue as seguintes etapas:
 
 1. **Identificação da distribuidora:** o usuário informa sua distribuidora de energia elétrica. Caso o nome não seja encontrado, o programa apresenta uma lista numerada com as distribuidoras disponíveis.
 2. **Seleção do período:** informa o mês e o ano de referência disponíveis na base tarifária. Caso o mês informado não esteja disponível, o programa apresenta uma lista numerada com os meses válidos.
@@ -250,6 +268,7 @@ GS_2026.02_SERS/
 │   └── tarifas_residenciais_processadas.csv
 │
 ├── processar_tarifa.py
+├── citizen_assist_ai.py
 ├── diagnostico_energetico.py
 ├── consultar_tarifa.py
 ├── eficiencia_energetica.py
@@ -268,7 +287,8 @@ GS_2026.02_SERS/
 | Arquivo | Responsabilidade |
 |---|---|
 | `processar_tarifa.py` | Consulta e processa os dados tarifários da ANEEL. |
-| `diagnostico_energetico.py` | Controla a execução e coleta as informações do usuário. |
+| `citizen_assist_ai.py` | Implementa o chatbot Citizen Assist AI, com menu, dúvidas, coleta de dados e apresentação dos resultados. |
+| `diagnostico_energetico.py` | Reúne as funções de coleta e cálculo reutilizadas pelo chatbot. |
 | `consultar_tarifa.py` | Consulta as tarifas e os períodos disponíveis no CSV. |
 | `eficiencia_energetica.py` | Simula os cenários de redução de consumo. |
 | `energia_solar.py` | Calcula o dimensionamento e o investimento solar estimado. |
@@ -298,13 +318,13 @@ python processar_tarifa.py
 
 Esse procedimento consulta a base pública da ANEEL e gera o arquivo CSV utilizado pelo simulador.
 
-### 12.3. Executar o diagnóstico
+### 12.3. Executar o chatbot Citizen Assist AI
 
 ```bash
-python diagnostico_energetico.py
+python citizen_assist_ai.py
 ```
 
-Após a execução, o programa solicitará as informações necessárias e apresentará os resultados no terminal.
+O chatbot apresenta sua função, exibe o menu e conduz a conversa pelo terminal. Escolha a opção 1 para realizar o diagnóstico energético, a opção 2 para tirar dúvidas, a opção 3 para consultar fontes e limitações ou a opção 4 para encerrar.
 
 ## 13. Testes realizados
 
@@ -323,11 +343,18 @@ Os testes contemplaram:
 - Dimensionamento do sistema solar.
 - Estimativa de investimento e retorno financeiro.
 - Cálculo das emissões estimadas e potencialmente evitadas.
-- Execução completa do programa sem erros.
+- Apresentação inicial e menu do chatbot Citizen Assist AI.
+- Respostas do chatbot a dúvidas sobre consumo, eficiência, energia solar, tarifas, investimento, retorno e emissões.
+- Exibição das fontes de dados e das limitações das estimativas pelo chatbot.
+- Execução completa do diagnóstico pelo chatbot.
+- Retorno ao menu para um novo diagnóstico e encerramento da conversa.
+- Execução completa do chatbot sem erros.
 
 ### Testes automatizados
 
 O projeto inclui testes automatizados dos cálculos de energia solar, dos cenários de eficiência energética, da consulta de tarifas e da conversão de unidades.
+
+O chatbot Citizen Assist AI foi validado por execução manual, incluindo o diagnóstico completo, as perguntas frequentes, a exibição de fontes e limitações, a repetição do diagnóstico e o encerramento da conversa.
 
 Para executá-los:
 
@@ -386,3 +413,5 @@ O projeto demonstra como dados públicos, programação e parâmetros de referê
 Ao comparar a situação atual com cenários de eficiência energética e geração solar fotovoltaica, o simulador apresenta diferentes possibilidades para reduzir o consumo da rede, os gastos estimados e os impactos ambientais associados à eletricidade.
 
 A proposta busca incentivar o uso consciente de energia e ampliar o conhecimento sobre alternativas mais sustentáveis para o ambiente residencial.
+
+O Citizen Assist AI complementa o simulador ao oferecer uma interação guiada no terminal, com explicações em linguagem simples, respostas a dúvidas frequentes e acesso às fontes e limitações das estimativas. Dessa forma, o projeto mantém os mesmos cálculos do simulador original e amplia a forma de apresentação dos resultados.

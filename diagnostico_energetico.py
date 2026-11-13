@@ -135,6 +135,10 @@ def coletar_dados():
     }
 
 
+def calcular_custo_estimado(consumo, tarifa_total):
+    return consumo * tarifa_total
+
+
 def realizar_diagnostico(dados):
     tarifa = buscar_tarifa(
         dados["distribuidora"],
@@ -148,7 +152,7 @@ def realizar_diagnostico(dados):
     consumo = dados["consumo_kwh"]
     tarifa_total = tarifa["tarifa_total"]
 
-    custo_estimado = consumo * tarifa_total
+    custo_estimado = calcular_custo_estimado(consumo, tarifa_total)
 
     print("\n=== RESULTADO DO DIAGNÓSTICO ===")
     print(f"Distribuidora: {tarifa['distribuidora']}")
@@ -214,15 +218,14 @@ def realizar_diagnostico(dados):
 
 
 def main():
-    try:
-        dados = coletar_dados()
-    except RuntimeError as erro:
-        print(f"\nErro: {erro}")
-        return 1
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-    if dados:
-        realizar_diagnostico(dados)
-
+    print(
+        "O diagnóstico energético agora é realizado pelo chatbot "
+        "Citizen Assist AI."
+    )
+    print("Execute: python citizen_assist_ai.py")
     return 0
 
 
