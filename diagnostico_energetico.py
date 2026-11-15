@@ -1,4 +1,5 @@
 
+import re
 import sys
 from decimal import Decimal, InvalidOperation
 from datetime import datetime
@@ -96,12 +97,67 @@ def coletar_mes_referencia(distribuidora):
                 print("Digite o número de uma das opções.")
 
 
+def converter_numero_brasileiro(entrada):
+    texto = str(entrada).strip()
+    texto = texto.replace("R$", "").replace(" ", "").replace("\u00a0", "")
+
+    if not texto:
+        raise InvalidOperation
+
+    if "," in texto:
+        if texto.count(",") != 1:
+            raise InvalidOperation
+
+        parte_inteira, parte_decimal = texto.split(",")
+
+        if not parte_decimal.isdigit():
+            raise InvalidOperation
+
+        if not parte_inteira:
+            parte_inteira = "0"
+
+        if "." in parte_inteira:
+            if not re.fullmatch(r"\d{1,3}(\.\d{3})+", parte_inteira):
+                raise InvalidOperation
+
+            parte_inteira = parte_inteira.replace(".", "")
+        elif not parte_inteira.isdigit():
+            raise InvalidOperation
+
+        return Decimal(f"{parte_inteira}.{parte_decimal}")
+
+    if "." in texto:
+        if texto.count(".") == 1:
+            parte_inteira, parte_decimal = texto.split(".")
+
+            if not parte_inteira.isdigit() or not parte_decimal.isdigit():
+                raise InvalidOperation
+
+            if len(parte_decimal) == 3:
+                if not re.fullmatch(r"\d{1,3}\.\d{3}", texto):
+                    raise InvalidOperation
+
+                return Decimal(parte_inteira + parte_decimal)
+
+            return Decimal(texto)
+
+        if not re.fullmatch(r"\d{1,3}(\.\d{3})+", texto):
+            raise InvalidOperation
+
+        return Decimal(texto.replace(".", ""))
+
+    if not re.fullmatch(r"\d+", texto):
+        raise InvalidOperation
+
+    return Decimal(texto)
+
+
 def coletar_valor_positivo(mensagem):
     while True:
-        entrada = input(mensagem).strip().replace(",", ".")
+        entrada = input(mensagem).strip()
 
         try:
-            valor = Decimal(entrada)
+            valor = converter_numero_brasileiro(entrada)
 
             if valor.is_finite() and valor > 0:
                 return valor
@@ -109,7 +165,10 @@ def coletar_valor_positivo(mensagem):
             print("Informe um valor numérico maior que zero.")
 
         except InvalidOperation:
-            print("Valor inválido. Digite um número, por exemplo: 1500,50.")
+            print(
+                "Valor inválido. Use, por exemplo: 1500, 1.500 "
+                "ou 1.500,50."
+            )
 
 
 def coletar_dados():
@@ -137,6 +196,10 @@ def coletar_dados():
 
 def calcular_custo_estimado(consumo, tarifa_total):
     return consumo * tarifa_total
+
+
+def calcular_diferenca_conta(valor_conta, custo_estimado):
+    return valor_conta - custo_estimado
 
 
 def realizar_diagnostico(dados):
@@ -172,9 +235,20 @@ def realizar_diagnostico(dados):
     print("\n=== ESTIMATIVA DE CUSTO ===")
     print(f"Custo estimado de TE + TUSD: R$ {custo_estimado:.2f}")
 
+    diferenca_conta = calcular_diferenca_conta(
+        dados["valor_conta"],
+        custo_estimado
+    )
+
+    print(
+        f"Diferença entre a conta informada e a estimativa: "
+        f"R$ {diferenca_conta:.2f}"
+    )
+
     print("\nObservação:")
     print("O custo estimado considera apenas TE e TUSD.")
-    print("O valor total da conta pode incluir impostos,")
+    print("Ele não representa o valor integral da fatura.")
+    print("A diferença para a conta informada pode decorrer de impostos,")
     print("bandeiras tarifárias, encargos e outros componentes.")
 
     cenarios_eficiencia = simular_eficiencia(

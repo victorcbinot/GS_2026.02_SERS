@@ -55,11 +55,13 @@ A aplicação é utilizada por meio do chatbot **Citizen Assist AI**, que funcio
 O chatbot apresenta o seguinte menu:
 
 1. **Fazer diagnóstico energético:** coleta distribuidora, mês de referência, consumo mensal e valor da conta, executa o diagnóstico e explica os resultados em linguagem simples.
-2. **Tirar dúvidas sobre consumo e economia de energia:** responde perguntas sobre consumo, eficiência energética, energia solar, tarifas, investimento, retorno estimado e emissões de CO₂.
+2. **Tirar dúvidas sobre consumo e economia de energia:** responde perguntas sobre consumo, eficiência energética, energia solar, tarifas, investimento, limitações do retorno financeiro e emissões de CO₂.
 3. **Ver fontes de dados e limitações:** apresenta as fontes utilizadas e as principais limitações das estimativas.
 4. **Encerrar a conversa:** finaliza o chatbot.
 
 Após um diagnóstico, o usuário pode voltar ao menu para realizar uma nova simulação ou encerrar o programa. As respostas do chatbot são baseadas nos cálculos do projeto e não substituem os resultados calculados pelo próprio sistema.
+
+Ao final do diagnóstico, o chatbot apresenta recomendações justificadas para eficiência energética, energia solar e combinação das duas alternativas. As recomendações usam os valores calculados no próprio diagnóstico e deixam explícito que não há dados suficientes para afirmar qual alternativa terá o melhor retorno financeiro.
 
 ### 6.2. Etapas do diagnóstico energético
 
@@ -72,6 +74,9 @@ Dentro da opção 1 do chatbot, o diagnóstico segue as seguintes etapas:
 5. **Eficiência energética:** apresenta cenários hipotéticos de redução de consumo de 5%, 10% e 15%.
 6. **Energia solar:** estima a potência necessária, a geração mensal e anual e o investimento inicial de referência.
 7. **Comparação:** apresenta os resultados financeiros e ambientais das alternativas.
+8. **Recomendações:** explica as vantagens e limitações de cada alternativa, informa que não há payback numérico e conclui que não é possível definir a melhor opção sem custos reais e avaliação técnica.
+
+Os valores numéricos aceitam o padrão brasileiro. Por exemplo, `1500`, `1.500`, `1500,50` e `1.500,50` são interpretados corretamente.
 
 ## 7. Alternativas analisadas
 
@@ -100,6 +105,23 @@ A energia solar fotovoltaica utiliza painéis para converter a radiação solar 
 O simulador estima a potência de um sistema capaz de atender ao consumo mensal informado e calcula uma referência de investimento inicial.
 
 A alternativa é apresentada como uma possibilidade de geração de energia renovável no próprio imóvel.
+
+### 7.4. Custos, viabilidade e justificativas das recomendações
+
+O chatbot não escolhe automaticamente uma alternativa como a melhor. Ele apresenta os valores calculados, as vantagens, as limitações e uma conclusão condicionada aos dados disponíveis. Essa escolha evita recomendações sem base técnica ou financeira.
+
+| Alternativa | Custo estimado | Viabilidade considerada | Impacto ambiental estimado |
+|---|---|---|---|
+| Situação atual | TE + TUSD do consumo informado | Não se aplica | Emissões associadas ao consumo da rede |
+| Eficiência energética | Custo das medidas não estimado pelo projeto | Depende das medidas adotadas e da redução efetiva do consumo | Emissões evitadas pela energia economizada |
+| Energia solar | Investimento inicial com referência histórica de R$ 2,66/Wp | Depende de avaliação técnica, compensação, localização e condições do imóvel | Emissões potencialmente evitadas pela geração solar |
+
+As recomendações apresentadas pelo chatbot seguem estes critérios:
+
+- **Eficiência energética:** justificada pela economia mensal estimada nos cenários de 5%, 10% e 15%, sempre como hipótese. O projeto não estima o custo das medidas e não garante a redução do consumo.
+- **Energia solar fotovoltaica:** justificada pela potência estimada, pela geração mensal, pelo investimento inicial de referência e pela economia potencial máxima teórica. A economia não é garantida e não há payback numérico.
+- **Combinação das alternativas:** apresentada como possibilidade complementar, pois reduzir o consumo pode diminuir a potência necessária do sistema solar. Esse novo dimensionamento não é calculado pelo projeto e exigiria nova simulação.
+- **Conclusão:** não há dados suficientes para afirmar qual alternativa terá melhor retorno financeiro. A decisão depende do objetivo do usuário, dos custos reais, das regras de compensação e das condições do imóvel.
 
 ## 8. Fontes de dados
 
@@ -158,6 +180,26 @@ Esse fator permite estimar as emissões associadas ao consumo de eletricidade e 
 
 Trata-se de um fator médio de referência, não de uma medição específica da distribuidora ou da residência.
 
+### 8.4. Parâmetros adotados e suas origens
+
+| Parâmetro | Valor e unidade | Origem | Período de referência | Limitações |
+|---|---:|---|---|---|
+| Tarifa TE + TUSD | R$/kWh | ANEEL, após conversão de R$/MWh | Vigência de cada registro tarifário | Não inclui impostos, bandeiras e outros encargos da fatura |
+| Custo de instalação solar | R$ 2,66/Wp | EPE, com dados de mercado da Greener | Primeiro semestre de 2024 | Referência histórica; não é orçamento atualizado |
+| Fator de emissão | 0,0461 kgCO₂/kWh | MCTI, SIN | 2025 | Média nacional; não é medição específica da residência |
+| Horas de Sol Pleno (HSP) | 5 h/dia | Premissa do projeto | Não se aplica | Não é medição da localização do imóvel |
+| Fator de desempenho (PR) | 0,80 | Premissa do projeto | Não se aplica | Valor simplificado para estimativa acadêmica |
+| Dias considerados no mês | 30 dias | Premissa do projeto | Não se aplica | Simplificação; não considera a variação dos meses |
+| Cenários de eficiência | 5%, 10% e 15% | Hipótese do projeto | Não se aplica | Não representam economia garantida |
+
+### 8.5. Referências verificáveis
+
+- **ANEEL - Tarifas de distribuidoras:** https://dadosabertos.aneel.gov.br/dataset/tarifas-distribuidoras-energia-eletrica
+- **EPE - Referência de custo de instalação solar:** https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/PublicacoesArquivos/publicacao-957/RT%20-%20Microrredes%20-%20FINAL.pdf
+- **MCTI - Fatores de emissão:** https://www.gov.br/mcti/pt-br/acompanhe-o-mcti/sirene/dados-e-ferramentas/fatores-de-emissao
+
+As premissas de HSP, PR, dias do mês e percentuais de eficiência estão identificadas como hipóteses do projeto, sem atribuição a uma fonte externa.
+
 ## 9. Metodologia e cálculos
 
 Os cálculos são realizados utilizando as informações fornecidas pelo usuário, os dados tarifários da ANEEL e os parâmetros de referência descritos anteriormente.
@@ -176,7 +218,7 @@ Onde:
 
 O resultado não representa necessariamente o valor total da conta de energia, pois não inclui todos os componentes que podem estar presentes na fatura.
 
-O valor total da conta informado pelo usuário é utilizado apenas como referência de exibição e não entra no cálculo do custo estimado, que considera exclusivamente TE e TUSD.
+O valor total da conta informado pelo usuário é comparado com a estimativa de TE + TUSD para mostrar a diferença entre os dois valores. Essa diferença pode decorrer de impostos, bandeiras tarifárias, encargos e outros componentes da fatura. O valor da conta não entra no cálculo do custo estimado, que considera exclusivamente TE e TUSD, e a estimativa não representa o valor integral da conta.
 
 ### 9.2. Economia por eficiência energética
 
@@ -223,17 +265,17 @@ O investimento inicial é estimado por:
 
 Os parâmetros de horas de sol pleno e fator de desempenho são hipóteses gerais utilizadas para a simulação. Não representam medições específicas da localização do imóvel.
 
-### 9.4. Retorno financeiro estimado
+### 9.4. Limitações do retorno financeiro
 
-O retorno financeiro simplificado é calculado por:
+O projeto não calcula nem apresenta um prazo de retorno (payback) numérico para o sistema solar. Faltam dados suficientes sobre autoconsumo, regras de compensação, tarifas futuras, manutenção e disponibilidade do sistema.
 
-`Retorno (meses) = Investimento inicial / Economia mensal teórica`
+A economia potencial máxima teórica é calculada por:
 
-O cálculo considera, de forma simplificada, a compensação integral do valor de TE + TUSD sobre a energia gerada pelo sistema solar.
+`Economia potencial máxima = Geração mensal × Tarifa total`
 
-Essa hipótese não representa necessariamente as condições reais de compensação de energia, que podem envolver cobranças, regras tarifárias, impostos e outros componentes.
+Essa hipótese considera que toda a geração seria compensada integralmente pela tarifa TE + TUSD. Ela não representa economia garantida nem previsão de retorno.
 
-Por isso, o resultado deve ser interpretado como uma estimativa teórica, e não como uma previsão garantida de retorno.
+O investimento inicial estimado continua sendo apresentado separadamente. A economia potencial e o investimento são referências para comparação, não uma previsão de retorno financeiro.
 
 ### 9.5. Impacto ambiental
 
@@ -274,9 +316,12 @@ GS_2026.02_SERS/
 ├── eficiencia_energetica.py
 ├── energia_solar.py
 ├── comparar_alternativas.py
+├── recomendacoes.py
 │
 ├── testes/
-│   └── test_calculos.py
+│   ├── test_calculos.py
+│   ├── roteiro_testes_usuarios.md
+│   └── registro_testes_usuarios.txt
 │
 ├── requirements.txt
 └── README.md
@@ -293,7 +338,8 @@ GS_2026.02_SERS/
 | `eficiencia_energetica.py` | Simula os cenários de redução de consumo. |
 | `energia_solar.py` | Calcula o dimensionamento e o investimento solar estimado. |
 | `comparar_alternativas.py` | Compara os resultados financeiros e ambientais. |
-| `testes/` | Armazena os testes automatizados dos cálculos e da consulta de tarifas. |
+| `recomendacoes.py` | Gera recomendações justificadas a partir da comparação. |
+| `testes/` | Armazena os testes automatizados e o roteiro de testes com usuários. |
 | `dados/` | Armazena a base tarifária processada. |
 | `requirements.txt` | Lista as dependências externas do projeto. |
 
@@ -337,22 +383,26 @@ Os testes contemplaram:
 - Seleção de meses disponíveis na base tarifária.
 - Entrada do consumo mensal em kWh.
 - Entrada do valor total da conta em reais.
+- Leitura de números no padrão brasileiro, como `1500`, `1.500`, `1500,50` e `1.500,50`.
+- Comparação entre o valor informado da conta e a estimativa de TE + TUSD.
 - Consulta das tarifas TE e TUSD.
 - Cálculo do custo estimado de energia.
 - Simulação dos cenários de eficiência energética.
 - Dimensionamento do sistema solar.
-- Estimativa de investimento e retorno financeiro.
+- Estimativa do investimento solar e análise das limitações do retorno financeiro.
 - Cálculo das emissões estimadas e potencialmente evitadas.
 - Apresentação inicial e menu do chatbot Citizen Assist AI.
-- Respostas do chatbot a dúvidas sobre consumo, eficiência, energia solar, tarifas, investimento, retorno e emissões.
+- Respostas do chatbot a dúvidas sobre consumo, eficiência, energia solar, tarifas, investimento, limitações do retorno financeiro e emissões.
 - Exibição das fontes de dados e das limitações das estimativas pelo chatbot.
 - Execução completa do diagnóstico pelo chatbot.
 - Retorno ao menu para um novo diagnóstico e encerramento da conversa.
 - Execução completa do chatbot sem erros.
+- Geração de recomendações justificadas para eficiência, energia solar e combinação.
+- Rejeição de entradas numéricas vazias, negativas ou com separadores inválidos.
 
 ### Testes automatizados
 
-O projeto inclui testes automatizados dos cálculos de energia solar, dos cenários de eficiência energética, da consulta de tarifas e da conversão de unidades.
+O projeto inclui 34 testes automatizados dos cálculos de energia solar, dos cenários de eficiência energética, da comparação de alternativas, das recomendações, da consulta de tarifas, da conversão de unidades e da leitura de números no padrão brasileiro. Os testes de consulta tarifária utilizam dados controlados e não dependem da base atual da ANEEL.
 
 O chatbot Citizen Assist AI foi validado por execução manual, incluindo o diagnóstico completo, as perguntas frequentes, a exibição de fontes e limitações, a repetição do diagnóstico e o encerramento da conversa.
 
@@ -361,6 +411,15 @@ Para executá-los:
 ```bash
 python -m unittest discover -s testes
 ```
+
+### Testes com usuários
+
+Os testes com usuários reais ainda não foram realizados. O roteiro com três cenários e o modelo de registro estão disponíveis em:
+
+- `testes/roteiro_testes_usuarios.md`
+- `testes/registro_testes_usuarios.txt`
+
+Os cenários preveem: (1) diagnóstico completo com dados válidos, (2) consulta de dúvidas e fontes, e (3) tratamento de entrada inválida. O arquivo de registro está sem preenchimento e deve ser completado apenas com observações reais dos participantes, sem dados inventados.
 
 ### Exemplo de teste realizado
 
@@ -379,6 +438,7 @@ Foi utilizado o seguinte cenário para verificar o funcionamento da aplicação:
 Resultados principais:
 
 - Custo estimado de TE + TUSD: R$ 1.202,52.
+- Diferença entre a conta informada e o custo estimado: R$ 1.797,48.
 - Economia mensal no cenário de 5%: R$ 60,13.
 - Economia mensal no cenário de 10%: R$ 120,25.
 - Economia mensal no cenário de 15%: R$ 180,38.
@@ -400,9 +460,11 @@ Para interpretar corretamente os resultados, é importante considerar as seguint
 3. **Eficiência energética:** os percentuais de redução são cenários hipotéticos, sem garantia de economia.
 4. **Energia solar:** o dimensionamento utiliza parâmetros estimados e não substitui um projeto técnico de instalação.
 5. **Investimento solar:** o custo por Wp é uma referência histórica de 2024 e pode não representar os preços atuais.
-6. **Retorno financeiro:** o cálculo considera uma compensação simplificada de TE + TUSD e não contempla todas as cobranças e regras aplicáveis à geração distribuída.
+6. **Retorno financeiro:** o projeto não apresenta payback numérico, pois não possui dados suficientes sobre autoconsumo, compensação, tarifas futuras, manutenção e disponibilidade do sistema. A economia potencial máxima é apenas uma referência, não uma garantia.
 7. **Impacto ambiental:** o fator de emissão é uma média nacional referente a 2025, não uma medição específica da residência.
 8. **Ciclo de vida dos equipamentos:** não são contabilizadas as emissões da fabricação, transporte, instalação, manutenção e descarte dos equipamentos solares.
+9. **Parâmetros solares:** as 5 horas de sol pleno por dia, o fator de desempenho de 0,80 e os 30 dias por mês são premissas acadêmicas do projeto, não medições da localização do usuário.
+10. **Recomendações:** o chatbot não define uma alternativa como melhor sem custos reais, regras de compensação e avaliação técnica. As recomendações são justificativas para comparação, não uma decisão automática.
 
 Portanto, os resultados devem ser utilizados como estimativas para comparação e conscientização sobre alternativas energéticas, não como garantias técnicas ou financeiras.
 
@@ -414,4 +476,12 @@ Ao comparar a situação atual com cenários de eficiência energética e geraç
 
 A proposta busca incentivar o uso consciente de energia e ampliar o conhecimento sobre alternativas mais sustentáveis para o ambiente residencial.
 
-O Citizen Assist AI complementa o simulador ao oferecer uma interação guiada no terminal, com explicações em linguagem simples, respostas a dúvidas frequentes e acesso às fontes e limitações das estimativas. Dessa forma, o projeto mantém os mesmos cálculos do simulador original e amplia a forma de apresentação dos resultados.
+O Citizen Assist AI complementa o simulador ao oferecer uma interação guiada no terminal, com explicações em linguagem simples, respostas a dúvidas frequentes, recomendações justificadas e acesso às fontes e limitações das estimativas. Dessa forma, o projeto mantém os mesmos cálculos do simulador original e amplia a forma de apresentação dos resultados.
+
+### Pendências para a entrega
+
+- Realizar os testes com usuários reais e preencher `testes/registro_testes_usuarios.txt`.
+- Inserir o link do vídeo de apresentação no campo indicado neste README.
+- Confirmar os nomes e RMs dos integrantes.
+- Executar novamente `python -m unittest discover -s testes` antes da entrega.
+- Reprocessar a base tarifária se a ANEEL disponibilizar períodos atualizados.

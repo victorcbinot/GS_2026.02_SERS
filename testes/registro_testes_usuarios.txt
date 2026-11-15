@@ -1,0 +1,149 @@
+REGISTRO DE TESTES COM USUÁRIOS
+Projeto: Citizen Assist AI - Diagnóstico Energético Residencial
+Status geral: AGUARDANDO REALIZAÇÃO DOS TESTES
+
+Instruções:
+- Preencher apenas com observações reais dos participantes.
+- Não inventar nomes, opiniões ou resultados.
+- Usar identificação anônima, como P01, P02 etc.
+- Registrar dificuldades, dúvidas e sugestões de forma objetiva.
+- Não inserir dados pessoais ou valores reais de contas em locais públicos.
+
+======================================================================
+TESTE 1 - DIAGNÓSTICO COMPLETO
+======================================================================
+Participante (código):
+Data:
+Perfil (sem dados pessoais):
+Distribuidora usada:
+Mês de referência:
+Consumo informado (kWh):
+Valor da conta informado (R$):
+
+Tarefa concluída? ( ) Sim ( ) Não ( ) Parcial
+Tempo aproximado:
+
+O participante encontrou a opção de diagnóstico?
+( ) Sim ( ) Não ( ) Com ajuda
+
+O participante entendeu a diferença entre a conta informada e a
+estimativa de TE + TUSD?
+( ) Sim ( ) Não ( ) Parcialmente
+Observações:
+
+O participante entendeu que os cenários de eficiência são hipotéticos?
+( ) Sim ( ) Não ( ) Parcialmente
+Observações:
+
+O participante entendeu o investimento solar e a economia potencial?
+( ) Sim ( ) Não ( ) Parcialmente
+Observações:
+
+O participante entendeu que não há payback numérico?
+( ) Sim ( ) Não ( ) Parcialmente
+Observações:
+
+As recomendações finais foram compreensíveis?
+( ) Sim ( ) Não ( ) Parcialmente
+Observações:
+
+Principais dificuldades:
+
+Sugestões do participante:
+
+Ajustes sugeridos pela equipe:
+
+Status do teste: ( ) Concluído ( ) Pendente
+
+
+======================================================================
+TESTE 2 - DÚVIDAS, FONTES E LIMITAÇÕES
+======================================================================
+Participante (código):
+Data:
+Perfil (sem dados pessoais):
+
+Perguntas realizadas:
+1.
+2.
+3.
+
+As respostas foram compreensíveis?
+( ) Sim ( ) Não ( ) Parcialmente
+Observações:
+
+O participante percebeu que as estimativas têm limitações?
+( ) Sim ( ) Não ( ) Parcialmente
+Observações:
+
+A explicação sobre a ausência de payback ficou clara?
+( ) Sim ( ) Não ( ) Parcialmente
+Observações:
+
+O participante encontrou as fontes e as limitações?
+( ) Sim ( ) Não ( ) Com ajuda
+Observações:
+
+Alguma resposta pareceu uma garantia de economia?
+( ) Sim ( ) Não
+Observações:
+
+Principais dificuldades:
+
+Sugestões do participante:
+
+Ajustes sugeridos pela equipe:
+
+Status do teste: ( ) Concluído ( ) Pendente
+
+
+======================================================================
+TESTE 3 - ENTRADA INVÁLIDA E RECUPERAÇÃO
+======================================================================
+Participante (código):
+Data:
+Perfil (sem dados pessoais):
+
+Entradas testadas:
+( ) Texto no consumo
+( ) Consumo vazio
+( ) Consumo negativo
+( ) Separador inválido
+( ) Valor da conta inválido
+
+O chatbot explicou o erro de forma clara?
+( ) Sim ( ) Não ( ) Parcialmente
+Observações:
+
+O participante conseguiu tentar novamente?
+( ) Sim ( ) Não ( ) Com ajuda
+Observações:
+
+O programa travou ou encerrou inesperadamente?
+( ) Sim ( ) Não
+Observações:
+
+O diagnóstico foi concluído após a correção?
+( ) Sim ( ) Não ( ) Parcialmente
+Observações:
+
+Principais dificuldades:
+
+Sugestões do participante:
+
+Ajustes sugeridos pela equipe:
+
+Status do teste: ( ) Concluído ( ) Pendente
+
+
+======================================================================
+RESUMO CONSOLIDADO (PREENCHER APÓS OS TESTES)
+======================================================================
+Número de participantes:
+Testes concluídos:
+Testes pendentes:
+Principais problemas identificados:
+Melhorias prioritárias:
+Ajustes realizados no chatbot:
+Ajustes realizados no README:
+Link do vídeo de apresentação:

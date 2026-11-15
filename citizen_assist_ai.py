@@ -1,16 +1,19 @@
-import io
 import sys
 import unicodedata
-from contextlib import redirect_stdout
 
-from comparar_alternativas import comparar_alternativas
+from comparar_alternativas import (
+    calcular_comparacao_alternativas,
+    comparar_alternativas
+)
 from consultar_tarifa import buscar_tarifa
 from diagnostico_energetico import (
     calcular_custo_estimado,
+    calcular_diferenca_conta,
     coletar_dados
 )
-from eficiencia_energetica import simular_eficiencia
+from eficiencia_energetica import calcular_cenarios_eficiencia
 from energia_solar import simular_energia_solar
+from recomendacoes import gerar_recomendacoes
 
 
 NOME_ASSISTENTE = "Citizen Assist AI"
@@ -24,12 +27,21 @@ PERGUNTAS_FREQUENTES = [
         "base tarifária da ANEEL."
     ),
     (
+        ("recomend", "melhor alternativa", "qual alternativa",
+         "qual escolher", "devo escolher"),
+        "Para receber uma recomendação baseada nos seus dados, faça o "
+        "diagnóstico na opção 1. O assistente compara eficiência "
+        "energética e energia solar, explica vantagens e limitações e "
+        "não afirma qual alternativa terá melhor retorno financeiro sem "
+        "custos reais e uma avaliação técnica."
+    ),
+    (
         ("retorno", "payback", "vale a pena", "se paga"),
-        "O retorno estimado compara o investimento inicial do sistema solar "
-        "com a economia mensal teórica. Ele é apenas uma referência: não "
-        "considera todas as regras de compensação, impostos, manutenção ou "
-        "variações futuras da tarifa. Por isso, não deve ser tratado como "
-        "garantia de retorno."
+        "O projeto não calcula um prazo de retorno (payback) numérico. "
+        "Faltam dados sobre autoconsumo, regras de compensação, tarifas "
+        "futuras, manutenção e disponibilidade do sistema. O investimento "
+        "inicial e a economia potencial são apenas referências para "
+        "comparação, não uma previsão de retorno."
     ),
     (
         ("investimento", "preco", "preço", "custo do sistema", "quanto custa"),
@@ -82,8 +94,9 @@ PERGUNTAS_FREQUENTES = [
 RESPOSTA_PADRAO = (
     "Ainda não tenho uma resposta específica para essa pergunta. Posso "
     "ajudar com consumo, economia de energia, eficiência energética, "
-    "energia solar, tarifas, investimento, retorno estimado e emissões de "
-    "CO₂. Para resultados com seus números, escolha a opção 1 do menu e "
+    "energia solar, tarifas, investimento, limitações do retorno "
+    "financeiro e emissões de CO₂. Para resultados com seus números, "
+    "escolha a opção 1 do menu e "
     "faça o diagnóstico energético."
 )
 
@@ -157,6 +170,15 @@ def exibir_fontes_e_limitacoes():
         "MCTI: fator médio de emissão de 0,0461 kgCO₂/kWh, referente"
     )
     print("ao Sistema Interligado Nacional em 2025.")
+    print(
+        "Premissas do projeto: 5 horas de sol pleno por dia, fator de "
+    )
+    print(
+        "desempenho de 0,80 e 30 dias por mês. Esses valores são "
+    )
+    print(
+        "hipóteses acadêmicas e não medições do local do usuário."
+    )
 
     print("\n=== LIMITAÇÕES DAS ESTIMATIVAS ===")
     print(
@@ -221,8 +243,10 @@ def exibir_resultado_simples(
     dados,
     tarifa,
     custo_estimado,
+    diferenca_conta,
     cenarios_eficiencia,
-    resultado_solar
+    resultado_solar,
+    economia_potencial_solar
 ):
     consumo = dados["consumo_kwh"]
     tarifa_total = tarifa["tarifa_total"]
@@ -239,13 +263,36 @@ def exibir_resultado_simples(
     print(
         f"o custo estimado de TE + TUSD é R$ {custo_estimado:.2f} por mês."
     )
+
+    print(f"A conta informada foi R$ {dados['valor_conta']:.2f}.")
+
+    if diferenca_conta > 0:
+        print(
+            f"Ela é R$ {diferenca_conta:.2f} maior que o custo estimado "
+            "de TE + TUSD."
+        )
+    elif diferenca_conta < 0:
+        print(
+            f"Ela é R$ {abs(diferenca_conta):.2f} menor que o custo "
+            "estimado de TE + TUSD."
+        )
+    else:
+        print("Ela é igual ao custo estimado de TE + TUSD.")
+
     print(
-        "A conta informada foi R$ "
-        f"{dados['valor_conta']:.2f}; a diferença pode ocorrer por causa "
-        "de impostos, bandeiras e outros componentes."
+        "Essa diferença pode decorrer de impostos, bandeiras tarifárias, "
+        "encargos e outros componentes da fatura."
+    )
+    print(
+        "A estimativa de TE + TUSD não representa o valor integral da "
+        "conta de energia."
     )
 
     print("\nO que as alternativas podem trazer:")
+    print(
+        "Os cenários de 5%, 10% e 15% são hipóteses de redução, "
+        "não resultados garantidos."
+    )
     print(
         f"- Eficiência energética: reduzir 5% do consumo economizaria "
         f"cerca de R$ {economia_5:.2f} por mês."
@@ -255,8 +302,8 @@ def exibir_resultado_simples(
         f"R$ {economia_10:.2f}; com 15%, R$ {economia_15:.2f}."
     )
     print(
-        "  Vantagens: costuma exigir pouco ou nenhum investimento e "
-        "pode trazer resultado rápido."
+        "  O projeto não estima o custo das medidas de eficiência "
+        "energética."
     )
     print(
         f"- Energia solar: um sistema de "
@@ -266,6 +313,15 @@ def exibir_resultado_simples(
     print(
         f"  O investimento inicial estimado é de "
         f"R$ {resultado_solar['investimento_estimado']:.2f}."
+    )
+    print(
+        f"  A economia potencial máxima teórica é de "
+        f"R$ {economia_potencial_solar:.2f} por mês, se toda a geração "
+        "fosse compensada."
+    )
+    print(
+        "  Essa economia não é garantida e não há previsão de prazo de "
+        "retorno."
     )
     print(
         "  Vantagens: gera energia renovável no próprio imóvel e reduz "
@@ -283,6 +339,20 @@ def exibir_resultado_simples(
         "As estimativas têm limitações. Use a opção 3 do menu para ver "
         "os detalhes."
     )
+
+
+def exibir_recomendacoes(recomendacoes):
+    print("\n=== RECOMENDAÇÕES DO CITIZEN ASSIST AI ===")
+
+    for chave in ("eficiencia", "solar", "combinacao"):
+        recomendacao = recomendacoes[chave]
+        print(f"\n{recomendacao['titulo']}:")
+        print(f"Justificativa: {recomendacao['justificativa']}")
+        print(f"Vantagens: {recomendacao['vantagens']}")
+        print(f"Limitações: {recomendacao['limitacoes']}")
+
+    print("\nConclusão:")
+    print(recomendacoes["conclusao"])
 
 
 def executar_diagnostico():
@@ -309,21 +379,32 @@ def executar_diagnostico():
     consumo = dados["consumo_kwh"]
     tarifa_total = tarifa["tarifa_total"]
     custo_estimado = calcular_custo_estimado(consumo, tarifa_total)
+    diferenca_conta = calcular_diferenca_conta(
+        dados["valor_conta"],
+        custo_estimado
+    )
 
-    with redirect_stdout(io.StringIO()):
-        cenarios_eficiencia = simular_eficiencia(
-            consumo,
-            tarifa_total
-        )
+    cenarios_eficiencia = calcular_cenarios_eficiencia(
+        consumo,
+        tarifa_total
+    )
 
     resultado_solar = simular_energia_solar(consumo)
+    comparacao = calcular_comparacao_alternativas(
+        consumo,
+        tarifa_total,
+        cenarios_eficiencia,
+        resultado_solar
+    )
 
     exibir_resultado_simples(
         dados,
         tarifa,
         custo_estimado,
+        diferenca_conta,
         cenarios_eficiencia,
-        resultado_solar
+        resultado_solar,
+        comparacao["solar"]["economia_potencial_mensal"]
     )
 
     print("\nAgora vou mostrar a comparação detalhada calculada pelo "
@@ -334,6 +415,9 @@ def executar_diagnostico():
         cenarios_eficiencia,
         resultado_solar
     )
+
+    recomendacoes = gerar_recomendacoes(comparacao)
+    exibir_recomendacoes(recomendacoes)
 
     print(
         "\nVocê pode escolher a opção 1 para fazer um novo diagnóstico "

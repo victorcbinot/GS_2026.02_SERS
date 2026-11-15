@@ -5,96 +5,156 @@ from decimal import Decimal
 FATOR_EMISSAO_KG_CO2_KWH = Decimal("0.0461")
 
 
-def comparar_alternativas(
+def calcular_comparacao_alternativas(
     consumo_mensal,
     tarifa_total,
     cenarios_eficiencia,
     resultado_solar
 ):
     custo_atual = consumo_mensal * tarifa_total
+    emissao_atual = consumo_mensal * FATOR_EMISSAO_KG_CO2_KWH
+
+    cenarios_comparados = []
+
+    for cenario in cenarios_eficiencia:
+        energia_economizada = cenario["consumo_economizado"]
+        emissao_evitada = energia_economizada * FATOR_EMISSAO_KG_CO2_KWH
+
+        cenarios_comparados.append({
+            **cenario,
+            "emissao_evitada": emissao_evitada,
+            "emissao_evitada_anual": emissao_evitada * 12
+        })
+
+    geracao_mensal = resultado_solar["geracao_mensal"]
+    emissao_evitada_solar = (
+        geracao_mensal * FATOR_EMISSAO_KG_CO2_KWH
+    )
+
+    return {
+        "custo_atual": custo_atual,
+        "emissao_atual": emissao_atual,
+        "cenarios_eficiencia": cenarios_comparados,
+        "solar": {
+            "potencia_kwp": resultado_solar["potencia_kwp"],
+            "geracao_mensal": geracao_mensal,
+            "geracao_anual": resultado_solar["geracao_anual"],
+            "investimento_estimado": (
+                resultado_solar["investimento_estimado"]
+            ),
+            "economia_potencial_mensal": (
+                geracao_mensal * tarifa_total
+            ),
+            "emissao_evitada": emissao_evitada_solar,
+            "emissao_evitada_anual": emissao_evitada_solar * 12
+        }
+    }
+
+
+def comparar_alternativas(
+    consumo_mensal,
+    tarifa_total,
+    cenarios_eficiencia,
+    resultado_solar
+):
+    comparacao = calcular_comparacao_alternativas(
+        consumo_mensal,
+        tarifa_total,
+        cenarios_eficiencia,
+        resultado_solar
+    )
+
+    custo_atual = comparacao["custo_atual"]
+    emissao_atual = comparacao["emissao_atual"]
 
     print("\n=== COMPARAÇÃO DE ALTERNATIVAS ===")
 
     print("\n1. SITUAÇÃO ATUAL")
     print(f"Consumo mensal: {consumo_mensal:.2f} kWh")
-    print(f"Custo estimado: R$ {custo_atual:.2f}")
-
-    emissao_atual = consumo_mensal * FATOR_EMISSAO_KG_CO2_KWH
-
+    print(f"Custo estimado de TE + TUSD: R$ {custo_atual:.2f}")
     print(
         f"Emissões estimadas: "
         f"{emissao_atual:.2f} kg de CO₂ por mês"
     )
+    print(
+        "Observação: o custo de TE + TUSD não representa o valor "
+        "integral da conta."
+    )
 
     print("\n2. EFICIÊNCIA ENERGÉTICA")
+    print(
+        "Os cenários de 5%, 10% e 15% são hipóteses de redução, "
+        "não resultados garantidos."
+    )
+    print("Investimento em eficiência energética: não estimado pelo projeto.")
 
-    for cenario in cenarios_eficiencia:
+    for cenario in comparacao["cenarios_eficiencia"]:
         percentual = cenario["percentual"] * 100
-
-        energia_economizada = cenario["consumo_economizado"]
-        emissao_evitada = (
-            energia_economizada * FATOR_EMISSAO_KG_CO2_KWH
-        )
 
         print(f"\nRedução de {percentual:.0f}%")
         print(f"Consumo mensal: {cenario['novo_consumo']:.2f} kWh")
         print(f"Custo estimado: R$ {cenario['novo_custo']:.2f}")
-        print(f"Economia mensal: R$ {cenario['economia']:.2f}")
+        print(f"Economia mensal estimada: R$ {cenario['economia']:.2f}")
         print(
             f"Emissões evitadas: "
-            f"{emissao_evitada:.2f} kg de CO₂ por mês"
+            f"{cenario['emissao_evitada']:.2f} kg de CO₂ por mês"
         )
         print(
             f"Emissões evitadas por ano: "
-            f"{emissao_evitada * 12:.2f} kg de CO₂"
+            f"{cenario['emissao_evitada_anual']:.2f} kg de CO₂"
         )
 
+    solar = comparacao["solar"]
+
     print("\n3. ENERGIA SOLAR FOTOVOLTAICA")
-
-    investimento = resultado_solar["investimento_estimado"]
-    geracao_mensal = resultado_solar["geracao_mensal"]
-
-    emissao_evitada_solar = (
-        geracao_mensal * FATOR_EMISSAO_KG_CO2_KWH
-    )
-
     print(
         f"Potência estimada: "
-        f"{resultado_solar['potencia_kwp']:.2f} kWp"
+        f"{solar['potencia_kwp']:.2f} kWp"
     )
     print(
         f"Geração mensal estimada: "
-        f"{geracao_mensal:.2f} kWh"
+        f"{solar['geracao_mensal']:.2f} kWh"
     )
     print(
         f"Geração anual estimada: "
-        f"{resultado_solar['geracao_anual']:.2f} kWh"
+        f"{solar['geracao_anual']:.2f} kWh"
     )
-    print(f"Investimento estimado: R$ {investimento:.2f}")
+    print(
+        f"Investimento inicial estimado: "
+        f"R$ {solar['investimento_estimado']:.2f}"
+    )
+    print(
+        f"Economia potencial máxima teórica: "
+        f"R$ {solar['economia_potencial_mensal']:.2f} por mês"
+    )
+    print(
+        "Essa economia potencial considera que toda a geração seria "
+        "compensada integralmente pela tarifa TE + TUSD."
+    )
+    print(
+        "Ela não é uma economia garantida e não representa uma "
+        "previsão de retorno financeiro."
+    )
     print(
         f"Emissões potencialmente evitadas: "
-        f"{emissao_evitada_solar:.2f} kg de CO₂ por mês"
+        f"{solar['emissao_evitada']:.2f} kg de CO₂ por mês"
     )
     print(
         f"Emissões potencialmente evitadas por ano: "
-        f"{emissao_evitada_solar * 12:.2f} kg de CO₂"
+        f"{solar['emissao_evitada_anual']:.2f} kg de CO₂"
     )
 
-    print("\n=== RETORNO FINANCEIRO ESTIMADO ===")
-
-    economia_mensal = custo_atual
-
-    if economia_mensal > 0:
-        economia_anual = economia_mensal * 12
-        meses_retorno = investimento / economia_mensal
-        anos_retorno = meses_retorno / 12
-
-        print(f"Economia mensal teórica: R$ {economia_mensal:.2f}")
-        print(f"Economia anual teórica: R$ {economia_anual:.2f}")
-        print(f"Retorno estimado: {meses_retorno:.1f} meses")
-        print(f"Equivalente a: {anos_retorno:.1f} anos")
-    else:
-        print("Não foi possível calcular o retorno financeiro.")
+    print("\n=== LIMITAÇÕES DO RETORNO FINANCEIRO ===")
+    print("Não é apresentado um prazo de retorno (payback) numérico.")
+    print(
+        "O projeto não possui dados suficientes sobre autoconsumo, "
+        "regras de compensação, tarifas futuras, manutenção e "
+        "disponibilidade do sistema."
+    )
+    print(
+        "Por isso, a economia potencial e o investimento inicial são "
+        "referências para comparação, não uma previsão de retorno."
+    )
 
     print("\n=== CONSIDERAÇÕES AMBIENTAIS E DA COMPARAÇÃO ===")
     print("A eficiência energética reduz o consumo de eletricidade.")
@@ -105,6 +165,4 @@ def comparar_alternativas(
     print("transporte, instalação ou descarte dos painéis solares.")
     print("O dimensionamento solar é uma estimativa técnica.")
     print("O investimento solar utiliza uma referência histórica da EPE.")
-    print("O retorno financeiro considera a compensação integral")
-    print("da tarifa TE + TUSD sobre a energia gerada.")
-    print("O retorno real e os impactos ambientais podem ser diferentes.")
+    print("Os valores reais podem ser diferentes das estimativas.")
