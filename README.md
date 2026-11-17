@@ -8,10 +8,9 @@
 | Miguel Marcelo       | 569467 |
 | Victor Binot         | 571499 |
 
-### Links do projeto
+### Link do projeto
 
 - **Repositório GitHub:** https://github.com/victorcbinot/GS_2026.02_SERS
-- **Vídeo de apresentação:** PREENCHER COM O LINK DO VÍDEO
 
 ## 2. Sobre o projeto
 
@@ -339,7 +338,7 @@ GS_2026.02_SERS/
 | `energia_solar.py` | Calcula o dimensionamento e o investimento solar estimado. |
 | `comparar_alternativas.py` | Compara os resultados financeiros e ambientais. |
 | `recomendacoes.py` | Gera recomendações justificadas a partir da comparação. |
-| `testes/` | Armazena os testes automatizados e o roteiro de testes com usuários. |
+| `testes/` | Armazena os testes automatizados e o roteiro de demonstração funcional. |
 | `dados/` | Armazena a base tarifária processada. |
 | `requirements.txt` | Lista as dependências externas do projeto. |
 
@@ -404,7 +403,7 @@ Os testes contemplaram:
 
 O projeto inclui 34 testes automatizados dos cálculos de energia solar, dos cenários de eficiência energética, da comparação de alternativas, das recomendações, da consulta de tarifas, da conversão de unidades e da leitura de números no padrão brasileiro. Os testes de consulta tarifária utilizam dados controlados e não dependem da base atual da ANEEL.
 
-O chatbot Citizen Assist AI foi validado por execução manual, incluindo o diagnóstico completo, as perguntas frequentes, a exibição de fontes e limitações, a repetição do diagnóstico e o encerramento da conversa.
+O chatbot Citizen Assist AI foi validado por execução manual, incluindo o diagnóstico completo, as perguntas frequentes, a exibição de fontes e limitações, a repetição do diagnóstico e o encerramento da conversa. Essa validação não substitui o registro dos quatro cenários de demonstração funcional descritos a seguir.
 
 Para executá-los:
 
@@ -412,16 +411,38 @@ Para executá-los:
 python -m unittest discover -s testes
 ```
 
-### Testes com usuários
+### Demonstração e Testes Funcionais
 
-Os testes com usuários reais ainda não foram realizados. O roteiro com três cenários e o modelo de registro estão disponíveis em:
+**Status:** os quatro cenários foram executados localmente em 16/11/2026 e aprovados. Os resultados observados estão registrados no formulário.
+
+A demonstração pode ser realizada pelos próprios integrantes da equipe, sem necessidade de pessoas externas. Essa abordagem segue a orientação de demonstrar o funcionamento da aplicação da melhor forma possível e concentra o registro em comportamentos observáveis do sistema.
+
+O roteiro e o formulário de registro estão disponíveis em:
 
 - `testes/roteiro_testes_usuarios.md`
 - `testes/registro_testes_usuarios.txt`
 
-Os cenários preveem: (1) diagnóstico completo com dados válidos, (2) consulta de dúvidas e fontes, e (3) tratamento de entrada inválida. O arquivo de registro está sem preenchimento e deve ser completado apenas com observações reais dos participantes, sem dados inventados.
+Os quatro cenários previstos são:
 
-### Exemplo de teste realizado
+| Cenário | Demonstração | Dados de demonstração |
+|---|---|---|
+| 1 | Diagnóstico energético completo | EDP SP, 12/2026, 1.500 kWh e conta de R$ 3.000,00 |
+| 2 | Simulação de eficiência energética | Reduções de 5%, 10% e 15% sobre o consumo do Cenário 1 |
+| 3 | Simulação de energia solar | Potência, geração e investimento para o consumo do Cenário 1 |
+| 4 | Interação com o chatbot e entradas inválidas | Dúvidas sobre energia, consulta de fontes e entradas inválidas |
+
+Os dados de entrada são exemplos fictícios de demonstração e não representam uma residência real. Os resultados esperados estão descritos no roteiro. O formulário registra o resultado efetivamente observado, a situação **aprovado** ou **reprovado** e as observações.
+
+Ao repetir a demonstração, nenhum cenário deve ser marcado como aprovado sem execução. Se a base tarifária não possuir o mês de demonstração, a equipe deve escolher outro mês disponível e registrar essa alteração.
+
+Para reproduzir a demonstração:
+
+1. Iniciar o chatbot com `python citizen_assist_ai.py`.
+2. Executar os quatro cenários descritos no roteiro.
+3. Registrar as saídas observadas no formulário.
+4. Executar `python -m unittest discover -s testes` para validar os 34 testes automatizados.
+
+### Exemplo de execução manual já realizada
 
 Foi utilizado o seguinte cenário para verificar o funcionamento da aplicação:
 
@@ -449,7 +470,7 @@ Resultados principais:
 
 A execução completa foi finalizada com código de saída 0, indicando que o programa foi executado sem erros nesse teste.
 
-Os resultados são referentes a um cenário de teste e não representam dados reais de uma residência específica.
+Os resultados são referentes a um cenário de teste e não representam dados reais de uma residência específica. Este exemplo registra uma execução manual anterior; o registro formal dos quatro cenários está no formulário de demonstração.
 
 ## 14. Premissas e limitações
 
@@ -477,11 +498,3 @@ Ao comparar a situação atual com cenários de eficiência energética e geraç
 A proposta busca incentivar o uso consciente de energia e ampliar o conhecimento sobre alternativas mais sustentáveis para o ambiente residencial.
 
 O Citizen Assist AI complementa o simulador ao oferecer uma interação guiada no terminal, com explicações em linguagem simples, respostas a dúvidas frequentes, recomendações justificadas e acesso às fontes e limitações das estimativas. Dessa forma, o projeto mantém os mesmos cálculos do simulador original e amplia a forma de apresentação dos resultados.
-
-### Pendências para a entrega
-
-- Realizar os testes com usuários reais e preencher `testes/registro_testes_usuarios.txt`.
-- Inserir o link do vídeo de apresentação no campo indicado neste README.
-- Confirmar os nomes e RMs dos integrantes.
-- Executar novamente `python -m unittest discover -s testes` antes da entrega.
-- Reprocessar a base tarifária se a ANEEL disponibilizar períodos atualizados.

@@ -1,149 +1,168 @@
-REGISTRO DE TESTES COM USUÁRIOS
+DEMONSTRAÇÃO E TESTES FUNCIONAIS
 Projeto: Citizen Assist AI - Diagnóstico Energético Residencial
-Status geral: AGUARDANDO REALIZAÇÃO DOS TESTES
+Status geral: CENÁRIOS EXECUTADOS EM 16/11/2026 - 4 APROVADOS
 
 Instruções:
-- Preencher apenas com observações reais dos participantes.
-- Não inventar nomes, opiniões ou resultados.
-- Usar identificação anônima, como P01, P02 etc.
-- Registrar dificuldades, dúvidas e sugestões de forma objetiva.
-- Não inserir dados pessoais ou valores reais de contas em locais públicos.
+- Executar os cenários com o chatbot antes de preencher este registro.
+- Registrar somente o resultado efetivamente observado.
+- Não inventar resultados ou observações.
+- Identificar os dados de entrada como dados de demonstração.
+- Marcar aprovado somente quando o comportamento esperado for observado.
+- Se a base tarifária não possuir o mês indicado, usar outro mês disponível e
+  registrar a alteração.
+
+DADOS DE DEMONSTRAÇÃO:
+Distribuidora: EDP SP
+Mês de referência: 12/2026
+Consumo mensal: 1.500 kWh
+Valor informado da conta: R$ 3.000,00
+Observação: dados fictícios, sem relação com uma residência real.
 
 ======================================================================
-TESTE 1 - DIAGNÓSTICO COMPLETO
+CENÁRIO 1 - DIAGNÓSTICO ENERGÉTICO COMPLETO
 ======================================================================
-Participante (código):
-Data:
-Perfil (sem dados pessoais):
-Distribuidora usada:
-Mês de referência:
-Consumo informado (kWh):
-Valor da conta informado (R$):
+Objetivo:
+Demonstrar a coleta de distribuidora, mês, consumo e valor da conta, com
+apresentação do resumo, da comparação e das recomendações.
 
-Tarefa concluída? ( ) Sim ( ) Não ( ) Parcial
-Tempo aproximado:
+Responsável pela execução: Equipe do projeto
+Data da execução: 16/11/2026
+Dados de entrada:
+Distribuidora: EDP SP
+Mês de referência: 12/2026
+Consumo (kWh): 1500
+Valor da conta (R$): 3000
 
-O participante encontrou a opção de diagnóstico?
-( ) Sim ( ) Não ( ) Com ajuda
+Resultado esperado:
+- Diagnóstico concluído sem erro inesperado.
+- Custo estimado de TE + TUSD: R$ 1.202,52.
+- Diferença para a conta informada: R$ 1.797,48.
+- Emissões atuais: 69,15 kg de CO₂ por mês.
+- Explicação sobre impostos, bandeiras e outros encargos.
+- Recomendações finais apresentadas.
 
-O participante entendeu a diferença entre a conta informada e a
-estimativa de TE + TUSD?
-( ) Sim ( ) Não ( ) Parcialmente
-Observações:
+Resultado efetivamente observado:
+- Tarifa total exibida: R$ 0,80168/kWh.
+- Custo estimado de TE + TUSD: R$ 1.202,52.
+- Conta informada: R$ 3.000,00; diferença: R$ 1.797,48.
+- Emissões atuais: 69,15 kg de CO₂ por mês.
+- Resumo, comparação detalhada e recomendações finais exibidos.
+- Nenhum erro ou encerramento inesperado.
 
-O participante entendeu que os cenários de eficiência são hipotéticos?
-( ) Sim ( ) Não ( ) Parcialmente
-Observações:
-
-O participante entendeu o investimento solar e a economia potencial?
-( ) Sim ( ) Não ( ) Parcialmente
-Observações:
-
-O participante entendeu que não há payback numérico?
-( ) Sim ( ) Não ( ) Parcialmente
-Observações:
-
-As recomendações finais foram compreensíveis?
-( ) Sim ( ) Não ( ) Parcialmente
-Observações:
-
-Principais dificuldades:
-
-Sugestões do participante:
-
-Ajustes sugeridos pela equipe:
-
-Status do teste: ( ) Concluído ( ) Pendente
+Situação: (X) Aprovado ( ) Reprovado
+Status da execução: ( ) Pendente (X) Executado
+Observações: Execução local em terminal; comportamento conforme o esperado.
 
 
 ======================================================================
-TESTE 2 - DÚVIDAS, FONTES E LIMITAÇÕES
+CENÁRIO 2 - SIMULAÇÃO DE EFICIÊNCIA ENERGÉTICA
 ======================================================================
-Participante (código):
-Data:
-Perfil (sem dados pessoais):
+Objetivo:
+Demonstrar os cenários hipotéticos de redução de 5%, 10% e 15% do consumo.
 
-Perguntas realizadas:
-1.
-2.
-3.
+Responsável pela execução: Equipe do projeto
+Data da execução: 16/11/2026
+Dados de entrada:
+Os mesmos do Cenário 1. Pode ser observado no mesmo diagnóstico.
 
-As respostas foram compreensíveis?
-( ) Sim ( ) Não ( ) Parcialmente
-Observações:
+Resultado esperado:
+- 5%: novo consumo de 1.425 kWh e economia de R$ 60,13 por mês.
+- 10%: novo consumo de 1.350 kWh e economia de R$ 120,25 por mês.
+- 15%: novo consumo de 1.275 kWh e economia de R$ 180,38 por mês.
+- Percentuais apresentados como hipóteses, sem garantia de economia.
+- Custo das medidas de eficiência não estimado pelo projeto.
 
-O participante percebeu que as estimativas têm limitações?
-( ) Sim ( ) Não ( ) Parcialmente
-Observações:
+Resultado efetivamente observado:
+- 5%: novo consumo de 1.425,00 kWh e economia de R$ 60,13 por mês.
+- 10%: novo consumo de 1.350,00 kWh e economia de R$ 120,25 por mês.
+- 15%: novo consumo de 1.275,00 kWh e economia de R$ 180,38 por mês.
+- Aviso de que os cenários são hipóteses foi exibido.
+- Aviso de que o custo das medidas não é estimado foi exibido.
 
-A explicação sobre a ausência de payback ficou clara?
-( ) Sim ( ) Não ( ) Parcialmente
-Observações:
-
-O participante encontrou as fontes e as limitações?
-( ) Sim ( ) Não ( ) Com ajuda
-Observações:
-
-Alguma resposta pareceu uma garantia de economia?
-( ) Sim ( ) Não
-Observações:
-
-Principais dificuldades:
-
-Sugestões do participante:
-
-Ajustes sugeridos pela equipe:
-
-Status do teste: ( ) Concluído ( ) Pendente
+Situação: (X) Aprovado ( ) Reprovado
+Status da execução: ( ) Pendente (X) Executado
+Observações: Simulação exibida no mesmo diagnóstico do Cenário 1.
 
 
 ======================================================================
-TESTE 3 - ENTRADA INVÁLIDA E RECUPERAÇÃO
+CENÁRIO 3 - SIMULAÇÃO DE ENERGIA SOLAR
 ======================================================================
-Participante (código):
-Data:
-Perfil (sem dados pessoais):
+Objetivo:
+Demonstrar a potência estimada, a geração mensal e anual e o investimento
+inicial de referência do sistema solar.
 
-Entradas testadas:
-( ) Texto no consumo
-( ) Consumo vazio
-( ) Consumo negativo
-( ) Separador inválido
-( ) Valor da conta inválido
+Responsável pela execução: Equipe do projeto
+Data da execução: 16/11/2026
+Dados de entrada:
+Os mesmos do Cenário 1. Pode ser observado no mesmo diagnóstico.
 
-O chatbot explicou o erro de forma clara?
-( ) Sim ( ) Não ( ) Parcialmente
-Observações:
+Resultado esperado:
+- Potência estimada: 12,50 kWp.
+- Geração mensal: 1.500 kWh.
+- Geração anual: 18.000 kWh.
+- Investimento inicial: R$ 33.250,00.
+- Economia potencial máxima teórica: R$ 1.202,52 por mês.
+- Emissões potencialmente evitadas: 69,15 kg de CO₂ por mês.
+- Ausência de payback numérico e ressalva sobre a economia não garantida.
+- Dimensionamento não substitui projeto técnico.
 
-O participante conseguiu tentar novamente?
-( ) Sim ( ) Não ( ) Com ajuda
-Observações:
+Resultado efetivamente observado:
+- Potência estimada: 12,50 kWp.
+- Geração mensal: 1.500,00 kWh; geração anual: 18.000,00 kWh.
+- Investimento inicial: R$ 33.250,00.
+- Economia potencial máxima teórica: R$ 1.202,52 por mês.
+- Emissões potencialmente evitadas: 69,15 kg de CO₂ por mês.
+- Ausência de payback numérico e ressalvas sobre compensação e projeto técnico exibidas.
 
-O programa travou ou encerrou inesperadamente?
-( ) Sim ( ) Não
-Observações:
-
-O diagnóstico foi concluído após a correção?
-( ) Sim ( ) Não ( ) Parcialmente
-Observações:
-
-Principais dificuldades:
-
-Sugestões do participante:
-
-Ajustes sugeridos pela equipe:
-
-Status do teste: ( ) Concluído ( ) Pendente
+Situação: (X) Aprovado ( ) Reprovado
+Status da execução: ( ) Pendente (X) Executado
+Observações: Simulação exibida no mesmo diagnóstico do Cenário 1.
 
 
 ======================================================================
-RESUMO CONSOLIDADO (PREENCHER APÓS OS TESTES)
+CENÁRIO 4 - INTERAÇÃO COM O CHATBOT E ENTRADAS INVÁLIDAS
 ======================================================================
-Número de participantes:
-Testes concluídos:
-Testes pendentes:
-Principais problemas identificados:
-Melhorias prioritárias:
-Ajustes realizados no chatbot:
-Ajustes realizados no README:
-Link do vídeo de apresentação:
+Objetivo:
+Demonstrar respostas a dúvidas, consulta de fontes e tratamento de entradas
+inválidas com recuperação do fluxo.
+
+Responsável pela execução: Equipe do projeto
+Data da execução: 16/11/2026
+Dúvidas utilizadas:
+1. Como posso economizar energia?
+2. Como funciona a energia solar?
+3. Qual a melhor alternativa?
+Entradas inválidas utilizadas:
+Consumo: abc, -10 e 1.50.00
+Valor da conta: abc
+
+Resultado esperado:
+- Dúvidas recebem respostas relacionadas ao tema perguntado.
+- Opção 3 apresenta fontes e limitações.
+- Entradas inválidas recebem mensagem clara e nova solicitação.
+- O chatbot não trava e permite corrigir os dados.
+- O diagnóstico é concluído após a correção.
+
+Resultado efetivamente observado:
+- As três dúvidas receberam respostas sobre eficiência energética, energia solar e recomendações.
+- A opção 3 exibiu fontes (ANEEL, EPE/Greener e MCTI) e limitações das estimativas.
+- As entradas abc, -10, 1.50.00 e abc geraram a mensagem "Valor inválido. Use, por exemplo: 1500, 1.500 ou 1.500,50." e nova solicitação.
+- Após informar 1500 e 3000, o diagnóstico foi concluído normalmente.
+- O chatbot não travou e encerrou com a opção 4.
+
+Situação: (X) Aprovado ( ) Reprovado
+Status da execução: ( ) Pendente (X) Executado
+Observações: Recuperação após entradas inválidas confirmada.
+
+
+======================================================================
+RESUMO CONSOLIDADO
+======================================================================
+Total de cenários: 4
+Cenários aprovados: 4
+Cenários reprovados: 0
+Cenários pendentes: 0
+Principais problemas identificados: Nenhum problema funcional observado.
+Correções necessárias: Nenhuma.
+Ajustes realizados no chatbot: Nenhum.
+Ajustes realizados no README: Nenhum durante a execução.
