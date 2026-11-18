@@ -415,6 +415,8 @@ python -m unittest discover -s testes
 
 **Status:** os quatro cenários foram executados localmente em 16/11/2026 e aprovados. Os resultados observados estão registrados no formulário.
 
+**Vídeo de demonstração:** https://youtu.be/yERmuNXob_M
+
 A demonstração pode ser realizada pelos próprios integrantes da equipe, sem necessidade de pessoas externas. Essa abordagem segue a orientação de demonstrar o funcionamento da aplicação da melhor forma possível e concentra o registro em comportamentos observáveis do sistema.
 
 O roteiro e o formulário de registro estão disponíveis em:
